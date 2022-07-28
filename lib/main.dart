@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:newcustomerform/insertpage.dart';
 import 'package:newcustomerform/viewpage.dart';
 
 void main()
