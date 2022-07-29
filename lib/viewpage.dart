@@ -102,7 +102,7 @@ class _ViewpageState extends State<Viewpage> {
           : Center(child: CircularProgressIndicator()),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
+            Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (context) {
                 return Insertpage("submit");
               },

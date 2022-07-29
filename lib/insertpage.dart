@@ -21,7 +21,7 @@ class _InsertpageState extends State<Insertpage> {
   bool english = false;
   bool marathi = false;
 
-  TextEditingController dob = TextEditingController();
+
   DateTime selectedDate = DateTime.now();
 
   var select;
@@ -37,13 +37,14 @@ class _InsertpageState extends State<Insertpage> {
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
    bool _passwordVisible = false;
-  String? gender;
+  String? tgender;
 
   TextEditingController tname = TextEditingController();
   TextEditingController temail = TextEditingController();
   TextEditingController tphone = TextEditingController();
   TextEditingController tpassword = TextEditingController();
   TextEditingController tconfirmpassword = TextEditingController();
+  TextEditingController tdob = TextEditingController();
   Database? db;
 
   @override
@@ -58,6 +59,10 @@ class _InsertpageState extends State<Insertpage> {
         tphone.text=widget.map!['phone'];
         tpassword.text=widget.map!['password'];
         tconfirmpassword.text=widget.map!['confirmpassword'];
+        tgender=widget.map!['gender'];
+        select=widget.map!['city'];
+        tdob.text=widget.map!['dob'];
+
       }
     DBHelper().createDatabase().then((value) {
       db = value;
@@ -177,10 +182,10 @@ class _InsertpageState extends State<Insertpage> {
                       title: Text("Male"),
                       leading: Radio(
                           value: "male",
-                          groupValue: gender,
+                          groupValue: tgender,
                           onChanged: (value){
                             setState(() {
-                              gender = value.toString();
+                              tgender = value.toString();
                             });
                           }),
                     ),
@@ -189,10 +194,10 @@ class _InsertpageState extends State<Insertpage> {
                       title: Text("Female"),
                       leading: Radio(
                           value: "female",
-                          groupValue: gender,
+                          groupValue: tgender,
                           onChanged: (value){
                             setState(() {
-                              gender = value.toString();
+                              tgender = value.toString();
                             });
                           }),
                     ),
@@ -201,10 +206,10 @@ class _InsertpageState extends State<Insertpage> {
                       title: Text("Other"),
                       leading: Radio(
                           value: "other",
-                          groupValue: gender,
+                          groupValue: tgender,
                           onChanged: (value){
                             setState(() {
-                              gender = value.toString();
+                              tgender = value.toString();
                             });
                           }),
                     )
@@ -310,7 +315,7 @@ class _InsertpageState extends State<Insertpage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                    controller: dob,
+                    controller: tdob,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -403,14 +408,18 @@ class _InsertpageState extends State<Insertpage> {
                   String phone = tphone.text;
                   String password = tpassword.text;
                   String confirmpassword = tconfirmpassword.text;
+                  String dob = tdob.text;
 
-                    if(_formkey.currentState!.validate()){
+                    // if(_formkey.currentState!.validate()){
 
                      if(widget.method=="submit"){
-                       String qry = "INSERT INTO Test(name,email,phone,password,confirmpassword) VALUES ('$name','$email','$phone','$password','$confirmpassword')";
+                       String qry = "INSERT INTO Test(name,email,phone,password,confirmpassword,gender,dob,city) VALUES ('$name','$email','$phone','$password','$confirmpassword','$tgender','$dob','$select')";
                        int id = await db!.rawInsert(qry);
                        print(id);
 
+                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                         return Viewpage();
+                       },));
                        if(id>0){
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                               return Viewpage();
@@ -419,7 +428,7 @@ class _InsertpageState extends State<Insertpage> {
                          print("Not Updated! Try Again");
                        }
                      }else{
-                       String q="update Test set name='$name',email='$email',phone='$phone',password='$password',confirmpassword='$confirmpassword' where id=${widget.map!['id']}";
+                       String q="update Test set name='$name',email='$email',phone='$phone',password='$password',confirmpassword='$confirmpassword',gender='$tgender',dob='$dob',city='$select' where id=${widget.map!['id']}";
                        int id = await db!.rawUpdate(q);
                        print("id=$id");
                        if(id==1)
@@ -429,7 +438,7 @@ class _InsertpageState extends State<Insertpage> {
                          },));
                        }
                      }
-                    }
+                    // }
                 }, child: Text("${widget.method}"))
               ],
             ),
@@ -450,6 +459,6 @@ class _InsertpageState extends State<Insertpage> {
       setState(() {
         selectedDate = selected;
       });
-    dob.text = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+    tdob.text = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
   }
 }

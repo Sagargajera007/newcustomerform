@@ -14,7 +14,7 @@ class DBHelper{
       onCreate: (Database db, int version) async {
       // When creating the db, create the table
       await db.execute(
-      'CREATE TABLE Test (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, phone TEXT, password TEXT, confirmpassword TEXT)');
+      'CREATE TABLE Test (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, phone TEXT, password TEXT, confirmpassword TEXT,gender TEXT,dob TEXT,city TEXT)');
       });
       return database;
       }
